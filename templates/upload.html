@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Crop and Upload</title>
+    <!-- Include Cropper.js CSS -->
+    <link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
+    <div id="loadingSpinner" class="loading-spinner"></div>
+
+    <link rel="stylesheet" href="static/css/style.css">
+
+    <style>
+        .top-right {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+        <h1>DE<span style="color: #fcba03;">SS</span>IGNERSEARCH</h1>
+    
+    <!-- Add the About button -->
+    <div class="top-right">
+        <a href="{{ url_for('about') }}"><button>About</button></a>
+    </div>
+
+
+    <!-- File input for selecting an image -->
+    <input type="file" id="fileInput" accept="image/*">
+    <br><br>
+    
+    <!-- Container for displaying the selected image -->
+    <div>
+        <img id="image" style="max-width: 100%;">
+    </div>
+    
+    <!-- Button to crop and upload the image -->
+    <button id="cropButton">Crop & Upload Image</button>
+
+    <!-- Footer Notes -->
+    <div class="footer-notes">
+        <p>- Undergoing maintenance. Check back soon for DESSIGNERSEARCH v2.</p>
+        <p>- Cold start times may vary. If issues occur, please refresh the site and try again.</p>
+    </div>
+
+    <!-- Script to include Cropper.js -->
+    <script src="https://unpkg.com/cropperjs"></script>
+    <script>
+        let cropper;
+        const fileInput = document.getElementById('fileInput');
+        const image = document.getElementById('image');
+        const cropButton = document.getElementById('cropButton');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    image.src = e.target.result;
+                    // Initialize cropper after the image is loaded
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        cropButton.addEventListener('click', () => {
+            if (cropper) {
+                // Get the cropped image data as a base64 string
+                const croppedCanvas = cropper.getCroppedCanvas();
+                const croppedImage = croppedCanvas.toDataURL('image/jpeg');
+
+                // Send the cropped image to the server
+                fetch('/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: croppedImage })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle server response
+                    console.log('Server response:', data);
+                    // Optionally, display the server response or processed image
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        });
+
+        document.getElementById('cropButton').addEventListener('click', () => {
+    if (cropper) {
+        // Show the loading spinner
+        document.getElementById('loadingSpinner').style.display = 'block';
+
+        const croppedCanvas = cropper.getCroppedCanvas();
+        croppedCanvas.toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('file', blob, 'cropped_image.jpg');
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Upload failed');
+                }
+            })
+            .then(data => {
+                // Hide the loading spinner
+                document.getElementById('loadingSpinner').style.display = 'none';
+
+                // Replace body content with response
+                document.body.innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to upload image.');
+
+                // Hide the loading spinner in case of error
+                document.getElementById('loadingSpinner').style.display = 'none';
+            });
+        }, 'image/jpeg');
+    }
+});
+
+    </script>
+
+
+    <style>
+    .loading-spinner {
+        display: none;
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-left-color: #000;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+
+
+
+</body>
+</html>

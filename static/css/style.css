@@ -1,0 +1,179 @@
+/* General styles */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: #ffffff;
+    margin: 20px 0;
+    font-size: 2.5em;
+}
+
+/* Style for the About button */
+.top-right button {
+    background-color: #787b82; /* Grey color */
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.top-right button:hover {
+    background-color: #505257; /* Darker grey on hover */
+    transform: translateY(-2px);
+}
+
+/* Upload form styles */
+#fileInput {
+    display: block;
+    margin: 20px auto;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    font-size: 1em;
+}
+
+#cropButton {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 24px;
+    background-color: #0a84ff; /* Match the Go Back button's color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Ensure text is centered inside the button */
+}
+
+#cropButton:hover {
+    background-color: #0055DD; /* Darker blue on hover */
+    transform: translateY(-2px);
+}
+
+/* Image display and cropping styles */
+#image {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    border: 2px solid #333;
+    border-radius: 12px;
+}
+
+/* Results page styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+li {
+    background-color: #1e1e1e;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+li p {
+    margin: 5px 0;
+}
+
+li img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+a {
+    color: #0a84ff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0055DD;
+}
+
+/* Go Back button styles */
+button {
+    display: block; /* Change to block to allow horizontal centering */
+    margin: 20px auto; /* Center the button horizontally */
+    padding: 12px 24px;
+    background-color: #0a84ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0055DD;
+    transform: translateY(-2px);
+}
+
+/* Loading Spinner */
+.loading-spinner {
+    display: none;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #0a84ff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Footer notes */
+.footer-notes {
+    color: white;
+    font-size: 0.8em;
+    text-align: center;
+    padding: 10px;
+    background-color: #121212;
+    opacity: 0.8;
+}
+
+/* Responsive styles */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+
+    button {
+        width: 100%;
+        font-size: 1em;
+    }
+
+    ul {
+        padding: 0 10px;
+    }
+
+    .footer-notes {
+        font-size: 0.7em;
+    }
+}

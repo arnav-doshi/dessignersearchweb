@@ -1,0 +1,28 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Results</title>
+
+  </head>
+  <body>
+    <h1>Results</h1>
+    <ul>
+      {% for item in results %}
+        <li>
+          <p>Brand Name: {{ item['Brand Name'] }}</p>
+          <p>Product Name: {{ item['Product Name'] }}</p>
+          <p>Price: {{ item['Price'] }}</p>
+          <p><a href="{{ item['Product Link'] }}">Product Link</a></p>
+          <img src="{{ item['Image Link'] }}" alt="{{ item['Product Name'] }}">
+        </li>
+      {% endfor %}
+    </ul>
+
+    <!-- Go Back Button -->
+    <button onclick="window.location.href='/'">Go Back</button>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>
