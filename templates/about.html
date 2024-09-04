@@ -70,12 +70,30 @@
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 40px; /* Add space below the button */
         }
 
         .back-button:hover {
             background-color: #0055DD;
             color: white;
             transform: translateY(-2px);
+        }
+
+        /* Video section */
+        .video-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 30px;
+            background-color: #1e1e1e;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .video-container video {
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         @media (max-width: 768px) {
@@ -98,12 +116,18 @@
 <body>
     <h2>ABOUT DE<span style="color: #fcba03;">SS</span>IGNERSEARCH</h2>
 
+    <!-- Video Section -->
+    <div class="video-container">
+        <video src="static/ssensevideo.mov" autoplay loop muted>
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <div class="about-container">
         <div class="about-text">
             <p>
             DESSIGNERSEARCH is an innovative platform conceptualized with the inspiration from a classmate, Sidharth Krishnaswamy, and brought to life by Arnav Doshi, a computer science student at San José State University (SJSU). Leveraging Facebook's cutting-edge similarity search AI (FAISS), the platform helps users find the closest possible matches for designer clothes, shoes, and accessories. With a comprehensive database of over 42,000 images of various designer items, DESSIGNERSEARCH offers a seamless and personalized shopping experience. The platform is designed to evolve, with continuous updates planned to enhance its capabilities and expand its image library, improve its searching capabilities, and more, ensuring it stays at the forefront of fashion technology.
-        </p>
+            </p>
         </div>
         <div class="about-image">
             <img src="static/about.jpg" alt="About DESSIGNERSEARCH" style="width: 400px; float: right; margin-right: 60px;">
@@ -111,5 +135,6 @@
     </div>
 
     <a href="/" class="back-button">Back to Main Site</a>
+
 </body>
 </html>

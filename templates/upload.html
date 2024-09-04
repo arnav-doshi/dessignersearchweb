@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Crop and Upload</title>
+    
     <!-- Include Cropper.js CSS -->
     <link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
-    <div id="loadingSpinner" class="loading-spinner"></div>
-
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
 
     <style>
@@ -16,16 +17,37 @@
             top: 10px;
             right: 10px;
         }
+
+        .loading-spinner {
+            display: none;
+            border: 4px solid rgba(255, 255, 255);
+            border-left-color: #000;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer-notes {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
-        <h1>DE<span style="color: #fcba03;">SS</span>IGNERSEARCH</h1>
-    
+    <h1>DE<span style="color: #fcba03;">SS</span>IGNERSEARCH</h1>
+
     <!-- Add the About button -->
     <div class="top-right">
         <a href="{{ url_for('about') }}"><button>About</button></a>
     </div>
-
 
     <!-- File input for selecting an image -->
     <input type="file" id="fileInput" accept="image/*">
@@ -39,10 +61,12 @@
     <!-- Button to crop and upload the image -->
     <button id="cropButton">Crop & Upload Image</button>
 
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner"></div>
+
     <!-- Footer Notes -->
     <div class="footer-notes">
-        <p>- Undergoing maintenance. Check back soon for DESSIGNERSEARCH v2.</p>
-        <p>- Cold start times may vary. If issues occur, please refresh the site and try again.</p>
+        <p>Startup times may vary. If you encounter any issues, please try again or refresh the page.</p>
     </div>
 
     <!-- Script to include Cropper.js -->
@@ -69,94 +93,44 @@
             }
         });
 
-        cropButton.addEventListener('click', () => {
+        cropButton.addEventListener('click', async () => {
             if (cropper) {
-                // Get the cropped image data as a base64 string
-                const croppedCanvas = cropper.getCroppedCanvas();
-                const croppedImage = croppedCanvas.toDataURL('image/jpeg');
+                // Show the loading spinner
+                document.getElementById('loadingSpinner').style.display = 'block';
 
-                // Send the cropped image to the server
-                fetch('/upload', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ image: croppedImage })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Handle server response
-                    console.log('Server response:', data);
-                    // Optionally, display the server response or processed image
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                // Wait for the next frame to ensure the spinner is shown
+                requestAnimationFrame(async () => {
+                    const croppedCanvas = cropper.getCroppedCanvas();
+                    croppedCanvas.toBlob(async (blob) => {
+                        const formData = new FormData();
+                        formData.append('file', blob, 'cropped_image.jpg');
+
+                        try {
+                            const response = await fetch('/upload', {
+                                method: 'POST',
+                                body: formData
+                            });
+
+                            // Hide the loading spinner
+                            document.getElementById('loadingSpinner').style.display = 'none';
+
+                            if (response.ok) {
+                                const data = await response.text();
+                                document.body.innerHTML = data;
+                            } else if (response.status === 504) {
+                                throw new Error('Timeout. Please click the button again.');
+                            } else {
+                                throw new Error('Upload failed');
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert(error.message);
+                            document.getElementById('loadingSpinner').style.display = 'none';
+                        }
+                    }, 'image/jpeg');
                 });
             }
         });
-
-        document.getElementById('cropButton').addEventListener('click', () => {
-    if (cropper) {
-        // Show the loading spinner
-        document.getElementById('loadingSpinner').style.display = 'block';
-
-        const croppedCanvas = cropper.getCroppedCanvas();
-        croppedCanvas.toBlob((blob) => {
-            const formData = new FormData();
-            formData.append('file', blob, 'cropped_image.jpg');
-
-            fetch('/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    throw new Error('Upload failed');
-                }
-            })
-            .then(data => {
-                // Hide the loading spinner
-                document.getElementById('loadingSpinner').style.display = 'none';
-
-                // Replace body content with response
-                document.body.innerHTML = data;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to upload image.');
-
-                // Hide the loading spinner in case of error
-                document.getElementById('loadingSpinner').style.display = 'none';
-            });
-        }, 'image/jpeg');
-    }
-});
-
     </script>
-
-
-    <style>
-    .loading-spinner {
-        display: none;
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        border-left-color: #000;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-</style>
-
-
-
-
 </body>
 </html>
