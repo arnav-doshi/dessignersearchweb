@@ -23,9 +23,8 @@ def upload_image():
         return "No file selected for uploading", 400
 
     if file:
-        # Read the image file
         img_data = file.read()
-        # Encode the image to base64
+        # b64 encoding
         img_base64 = base64.b64encode(img_data).decode('utf-8')
         payload = {
             "body": img_base64,
@@ -34,15 +33,14 @@ def upload_image():
             }
         }
 
-        # Send the POST request to the API
+        # POST request
         response = requests.post(API_URL, json=payload)
 
         if response.status_code == 200:
-            # Process the response from the API
+            # API Response
             api_response = response.json()
             body = json.loads(api_response["body"])
 
-            # Render the response in a template
             return render_template('results.html', results=body)
         else:
             return f"Error: {response.status_code}", 500
