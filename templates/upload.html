@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Crop and Upload</title>
     
-    <!-- Include Cropper.js CSS -->
+    <!-- Cropper.js CSS -->
     <link href="https://unpkg.com/cropperjs/dist/cropper.min.css" rel="stylesheet">
     
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="static/css/style.css">
 
     <style>
@@ -44,32 +43,25 @@
 <body>
     <h1>DE<span style="color: #fcba03;">SS</span>IGNERSEARCH</h1>
 
-    <!-- Add the About button -->
     <div class="top-right">
         <a href="{{ url_for('about') }}"><button>About</button></a>
     </div>
 
-    <!-- File input for selecting an image -->
     <input type="file" id="fileInput" accept="image/*">
     <br><br>
     
-    <!-- Container for displaying the selected image -->
     <div>
         <img id="image" style="max-width: 100%;">
     </div>
     
-    <!-- Button to crop and upload the image -->
     <button id="cropButton">Crop & Upload Image</button>
 
-    <!-- Loading Spinner -->
     <div id="loadingSpinner" class="loading-spinner"></div>
 
-    <!-- Footer Notes -->
     <div class="footer-notes">
         <p>Startup times may vary. If you encounter any issues, please try again or refresh the page.</p>
     </div>
 
-    <!-- Script to include Cropper.js -->
     <script src="https://unpkg.com/cropperjs"></script>
     <script>
         let cropper;
@@ -83,7 +75,6 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     image.src = e.target.result;
-                    // Initialize cropper after the image is loaded
                     cropper = new Cropper(image, {
                         aspectRatio: 1,
                         viewMode: 1
@@ -95,10 +86,8 @@
 
         cropButton.addEventListener('click', async () => {
             if (cropper) {
-                // Show the loading spinner
                 document.getElementById('loadingSpinner').style.display = 'block';
 
-                // Wait for the next frame to ensure the spinner is shown
                 requestAnimationFrame(async () => {
                     const croppedCanvas = cropper.getCroppedCanvas();
                     croppedCanvas.toBlob(async (blob) => {
@@ -111,7 +100,6 @@
                                 body: formData
                             });
 
-                            // Hide the loading spinner
                             document.getElementById('loadingSpinner').style.display = 'none';
 
                             if (response.ok) {
